@@ -1,0 +1,22 @@
+@import '@nativescript/theme/css/core.css';
+@import '@nativescript/theme/css/default.css';
+
+Button.-primary {
+  font-size: 18;
+}
+
+$primaryColorDark: #C2185B;
+$primaryColor: #E91E63;
+$primaryColorLight: #F8BBD0;
+$textColor: #FFFFFF;
+$accentColor: #607D8B;
+$primaryTextColor: #212121;
+$secondaryTextColor: #757575;
+$dividerColor: #BDBDBD;
+
+Button {
+  padding: 10 20 ;
+  background-color: $primaryColor;
+  color: $textColor;
+}
+

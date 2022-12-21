@@ -1,0 +1,9 @@
+<ActionBar title="Hlavní strana">
+</ActionBar>
+<FlexboxLayout flexDirection="column">
+    <FlexboxLayout flexDirection="row" flexGrow="4">
+        <Button [nsRouterLink]="['/asset-scan']" text="Skenování majetku" class="primary" flexGrow="1"></Button>
+        <Button [nsRouterLink]="['/location-register']"  text="Registrace místnosti" class="primary" flexGrow="1"></Button>
+    </FlexboxLayout>
+    <Button text="Přehled oskenovaného majetku" flexGrow="1"></Button>
+</FlexboxLayout>
