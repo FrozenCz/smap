@@ -1,4 +1,15 @@
 <ActionBar title="Registrace místností">
     <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
 </ActionBar>
-<label text="location register"></label>
+<StackLayout>
+    <label *ngIf="tagId" [text]="tagId"></label>
+    <label *ngIf="!tagId" text="Prosím přiložte zařízení k NFC štítku {{tagId}}"></label>
+    <ListView [items]="locations" *ngIf="tagId">
+        <ng-template let-item="item">
+            <StackLayout (tap)="selectedLocation=item" [class]="{'primary':selectedLocation && selectedLocation.uuid === item.uuid}">
+                <Label [text]="item.name"></Label>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>
+</StackLayout>
