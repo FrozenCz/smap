@@ -20,7 +20,7 @@ export class AppService {
   }
 
   setNfcIdForLocation(locationUuid: string, tagId: string): Observable<void> {
-    return this.httpClient.patch<void>(this.rest + '/locations/' + locationUuid, {tagId})
+    return this.httpClient.patch<void>(this.rest + '/locations/' + locationUuid, {nfcId: tagId})
   }
 
 }

@@ -12,6 +12,7 @@
     "@angular/platform-browser": "~15.0.0",
     "@angular/platform-browser-dynamic": "~15.0.0",
     "@angular/router": "~15.0.0",
+    "@nativescript-community/ui-material-snackbar": "^7.0.33",
     "@nativescript/angular": "~15.0.0",
     "@nativescript/core": "~8.4.0",
     "@nativescript/theme": "~3.0.2",
