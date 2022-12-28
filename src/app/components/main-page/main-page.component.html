@@ -1,9 +1,11 @@
 <ActionBar title="Hlavní strana">
 </ActionBar>
 <FlexboxLayout flexDirection="column">
-    <FlexboxLayout flexDirection="row" flexGrow="4">
-        <Button [nsRouterLink]="['/asset-scan']" text="Skenování majetku" class="primary" flexGrow="1"></Button>
-        <Button [nsRouterLink]="['/location-register']"  text="Registrace místnosti" class="primary" flexGrow="1"></Button>
+    <FlexboxLayout flexDirection="row" flexGrow="1">
+        <Button text="Načtení dat" class="basic" flexGrow="1" (tap)="loadData()"></Button>
+        <Button text="Odeslání dat" class="success" flexGrow="1" (tap)="sendData()"></Button>
     </FlexboxLayout>
+    <Button [nsRouterLink]="['/asset-scan']" text="Skenování majetku" class="primary" flexGrow="1"></Button>
+    <Button [nsRouterLink]="['/location-register']"  text="Registrace místnosti" class="primary" flexGrow="1"></Button>
     <Button text="Přehled oskenovaného majetku" flexGrow="1"></Button>
 </FlexboxLayout>

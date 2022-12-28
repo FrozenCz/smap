@@ -1,16 +1,5 @@
 import {Injectable} from '@angular/core';
-import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  firstValueFrom,
-  map,
-  noop,
-  Observable,
-  switchMap,
-  take,
-  tap
-} from 'rxjs';
+import {BehaviorSubject, combineLatest, firstValueFrom, map, noop, Observable, tap} from 'rxjs';
 import {LocationModel} from './model/location.model';
 import {HttpClient} from '@angular/common/http';
 import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
@@ -25,17 +14,16 @@ export class AppService {
   rest = 'https://smap-rest.milanknop.cz';
 
   constructor(private httpClient: HttpClient) {
-    this.fetchLocations();
-    this.fetchItems();
+    firstValueFrom(this.reloadData()).then(noop)
   }
 
-  private fetchLocations(): void {
-    firstValueFrom(this.httpClient.get<LocationModel[]>(this.rest + '/locations').pipe(
-      tap((locations) => this._locations$.next(locations)))).then(noop)
+  private fetchLocations(): Observable<LocationModel[]> {
+    return this.httpClient.get<LocationModel[]>(this.rest + '/locations').pipe(
+      tap((locations) => this._locations$.next(locations)))
   }
 
-  private fetchItems(): void {
-      firstValueFrom(this.httpClient.get<AssetModelDTO[]>(this.rest + '/barcodes')).then((assetModelDTOs) => {
+  private fetchItems(): Observable<AssetModelDTO[]> {
+    return this.httpClient.get<AssetModelDTO[]>(this.rest + '/barcodes').pipe(tap((assetModelDTOs) => {
       this._items$.next(assetModelDTOs.map(a => {
         return {
           id: a.id,
@@ -45,7 +33,7 @@ export class AppService {
           locationConfirmed: undefined
         }
       }))
-    })
+    }))
   }
 
 
@@ -117,5 +105,21 @@ export class AppService {
     change.found = true;
     change.locationConfirmed = this._locations$.getValue().find(l => l.uuid === uuid);
     this._items$.next(withFound);
+  }
+
+  reloadData() {
+    return combineLatest([this.fetchLocations(), this.fetchItems()])
+  }
+
+  sendData() {
+    return this.httpClient.post<void>(this.rest, {
+      assets: this._items$.getValue().map(a => {
+        return {
+          id: a.id,
+          found: a.found,
+          locationConfirmedUuid: a.locationConfirmed?.uuid
+        }
+      })
+    })
   }
 }

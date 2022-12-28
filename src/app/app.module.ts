@@ -1,10 +1,8 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core'
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core'
 import {NativeScriptHttpClientModule, NativeScriptModule} from '@nativescript/angular'
 
-import { AppRoutingModule } from './app-routing.module'
-import { AppComponent } from './app.component'
-import { ItemsComponent } from './item/items.component'
-import { ItemDetailComponent } from './item/item-detail.component'
+import {AppRoutingModule} from './app-routing.module'
+import {AppComponent} from './app.component'
 import {MainPageComponent} from '~/app/components/main-page/main-page.component';
 import {AssetScanComponent} from '~/app/components/asset-scan/asset-scan.component';
 import {LocationRegisterComponent} from '~/app/components/location-register/location-register.component';
@@ -12,12 +10,12 @@ import {LocationRegisterComponent} from '~/app/components/location-register/loca
 @NgModule({
   bootstrap: [AppComponent],
   imports: [NativeScriptModule, AppRoutingModule, NativeScriptHttpClientModule],
-  declarations: [AppComponent, ItemsComponent, ItemDetailComponent,
-    MainPageComponent,
+  declarations: [AppComponent, MainPageComponent,
     AssetScanComponent,
     LocationRegisterComponent
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA],
 })
-export class AppModule {}
+export class AppModule {
+}

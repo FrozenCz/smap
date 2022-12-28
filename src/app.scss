@@ -13,11 +13,19 @@ $accentColor: #607D8B;
 $primaryTextColor: #212121;
 $secondaryTextColor: #757575;
 $dividerColor: #BDBDBD;
+$successColor: #245b24;
 
 Button {
   padding: 10 20 ;
   background-color: $primaryColor;
   color: $textColor;
+  &.success {
+    background-color: $successColor;
+  }
+  &.basic {
+    background-color: $accentColor;
+    color: $textColor;
+  }
 }
 
 StackLayout.primary {
