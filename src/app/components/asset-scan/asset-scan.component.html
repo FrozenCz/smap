@@ -1,6 +1,16 @@
 <ActionBar title="Skenování majetku">
     <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
 </ActionBar>
-<label text="asset scan"></label>
-
+<StackLayout>
+    <label *ngIf="!selectedLocation" text="Prosím přiložte zařízení k NFC štítku místnosti" style="font-size: 20; text-align: center"></label>
+    <label *ngIf="selectedLocation" text="Scanujete místnost {{selectedLocation.name}}" style="font-size: 20; text-align: center"></label>
+    <ListView [items]="assets" *ngIf="selectedLocation">
+        <ng-template let-item="item">
+            <StackLayout [class]="{'primary':item.found}">
+                <Label [text]="item.name"></Label>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+<!--    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>-->
+</StackLayout>
 

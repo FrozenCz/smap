@@ -4,7 +4,7 @@
 <StackLayout>
     <label *ngIf="tagId" [text]="tagId"></label>
     <label *ngIf="!tagId" text="Prosím přiložte zařízení k NFC štítku {{tagId}}" style="font-size: 20; text-align: center"></label>
-    <ListView [items]="locations" *ngIf="tagId">
+    <ListView [items]="locations$ | async" *ngIf="tagId">
         <ng-template let-item="item">
             <StackLayout (tap)="selectedLocation=item" [class]="{'primary':selectedLocation && selectedLocation.uuid === item.uuid}">
                 <Label [text]="item.name"></Label>

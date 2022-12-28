@@ -15,14 +15,12 @@ export class LocationRegisterComponent implements OnInit {
   avail = false;
   enabled = false;
   tagId: null | string = null;
-  locations: LocationModel[] = [];
+  locations$: Observable<LocationModel[]>
   selectedLocation: LocationModel | null = null;
 
 
   constructor(private _appService: AppService) {
-    firstValueFrom(this._appService.getLocations()).then(locations => {
-      this.locations = locations;
-    })
+    this.locations$ = this._appService.getLocations$();
   }
 
 
@@ -37,13 +35,13 @@ export class LocationRegisterComponent implements OnInit {
           this.enabled = on;
 
           nfc.setOnNdefDiscoveredListener((data) => {
-            const serialHex = this.convertToHex(data.id)
+            const serialHex = AppService.convertToHex(data.id)
             // console.log(serialHex);
             this.tagId = serialHex;
           })
 
           nfc.setOnTagDiscoveredListener((data) => {
-            const serialHex = this.convertToHex(data.id)
+            const serialHex = AppService.convertToHex(data.id)
             // console.log(serialHex);
             this.tagId = serialHex;
           })
@@ -52,42 +50,6 @@ export class LocationRegisterComponent implements OnInit {
       }
     })
   }
-
-  private convertToHex(str: number[]) {
-    let id: string = '';
-    for (var i = 0; i < str.length; i++) {
-      id += (i ? ':' : '') + this.decimalHexTwosComplement(str[i]).toUpperCase();
-    }
-    return id;
-  }
-
-  private decimalHexTwosComplement(decimal) {
-    const size = 2;
-
-    if (decimal >= 0) {
-      let hexadecimal = decimal.toString(16);
-
-      while ((hexadecimal.length % size) != 0) {
-        hexadecimal = "" + 0 + hexadecimal;
-      }
-
-      return hexadecimal;
-    } else {
-      let hexadecimal = Math.abs(decimal).toString(16);
-      while ((hexadecimal.length % size) != 0) {
-        hexadecimal = "" + 0 + hexadecimal;
-      }
-
-      var output = '';
-      for (let i = 0; i < hexadecimal.length; i++) {
-        output += (0x0F - parseInt(hexadecimal[i], 16)).toString(16);
-      }
-
-      output = (0x01 + parseInt(output, 16)).toString(16);
-      return output;
-    }
-  }
-
 
   setNfcIdForLocation(selectedLocation: LocationModel, tagId: string) {
     firstValueFrom(this._appService.setNfcIdForLocation(selectedLocation.uuid, tagId)).then(() => {
