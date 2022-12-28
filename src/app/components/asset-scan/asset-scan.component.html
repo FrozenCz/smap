@@ -4,7 +4,16 @@
 <StackLayout>
     <label *ngIf="!selectedLocation" text="Prosím přiložte zařízení k NFC štítku místnosti" style="font-size: 20; text-align: center"></label>
     <label *ngIf="selectedLocation" text="Scanujete místnost {{selectedLocation.name}}" style="font-size: 20; text-align: center"></label>
-    <ListView [items]="assets" *ngIf="selectedLocation">
+    <BarcodeScanner
+            class="scanner-round"
+            formats="QR_CODE, EAN_13"
+            beepOnScan="true"
+            reportDuplicates="true"
+            preferFrontCamera="false"
+    >
+    </BarcodeScanner>
+    <Button class="scan" text="Scanovat" [isEnabled]="!!selectedLocation" (tap)="barcodeTest()"></Button>
+    <ListView [items]="assets$ | async" *ngIf="selectedLocation">
         <ng-template let-item="item">
             <StackLayout [class]="{'primary':item.found}">
                 <Label [text]="item.name"></Label>

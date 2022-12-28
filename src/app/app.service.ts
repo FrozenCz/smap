@@ -1,5 +1,16 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, filter, firstValueFrom, noop, Observable, switchMap, take, tap} from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  firstValueFrom,
+  map,
+  noop,
+  Observable,
+  switchMap,
+  take,
+  tap
+} from 'rxjs';
 import {LocationModel} from './model/location.model';
 import {HttpClient} from '@angular/common/http';
 import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
@@ -85,7 +96,26 @@ export class AppService {
     }
   }
 
-  getItemsForRoom(uuid: string): AssetModel[] {
-    return this._items$.getValue().filter(i => i.locationOld.uuid === uuid);
+  getItemsForRoom(uuid: string): Observable<AssetModel[]> {
+    return this._items$.asObservable().pipe(map(assets => assets.filter(i => (i.locationOld.uuid === uuid && i.locationConfirmed === undefined) || i.locationConfirmed?.uuid === uuid)))
+  }
+
+  getItemById(id: number): AssetModel | undefined {
+    return this._items$.getValue().find(a => a.id === id);
+  }
+
+
+  setFound(id: number) {
+    const withFound = this._items$.getValue();
+    withFound.find(i => i.id === id).found = true;
+    this._items$.next(withFound);
+  }
+
+  changeLocation(id: number, uuid: string) {
+    const withFound = this._items$.getValue();
+    const change = withFound.find(i => i.id === id);
+    change.found = true;
+    change.locationConfirmed = this._locations$.getValue().find(l => l.uuid === uuid);
+    this._items$.next(withFound);
   }
 }
