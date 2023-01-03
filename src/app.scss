@@ -32,3 +32,15 @@ StackLayout.primary {
   background-color: $primaryColor;
   color: $textColor;
 }
+
+
+.roundedBulb {
+  height: 30;
+  width: 30;
+  display: block;
+  border-radius: 20;
+  background-color: red;
+  &.founded {
+    background-color: green;
+  }
+}

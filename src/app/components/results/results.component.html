@@ -1,0 +1,12 @@
+<GridLayout columns="auto">
+    <ListView [items]="assets$ | async" width="100% ">
+        <ng-template let-item="item">
+            <GridLayout [class]="{'primary':item.found}" columns="*,*,30" rows="*">
+                <label [text]="item.name" row="0" col="0"></label>
+                <label horizontalAlignment="stretch" [text]="item.locationOld.name+' -> '+item.locationConfirmed.name" row="0" col="1"
+                       *ngIf="item.locationConfirmed && item.locationOld && item.locationConfirmed.uuid !== item.locationOld.uuid"></label>
+                <label  [class]="item.found ? 'roundedBulb founded' : 'roundedBulb'" text="" width="30" row="0" col="2"></label>
+            </GridLayout>
+        </ng-template>
+    </ListView>
+</GridLayout>

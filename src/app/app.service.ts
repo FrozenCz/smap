@@ -85,7 +85,7 @@ export class AppService {
   }
 
   getItemsForRoom(uuid: string): Observable<AssetModel[]> {
-    return this._items$.asObservable().pipe(map(assets => assets.filter(i => (i.locationOld.uuid === uuid && i.locationConfirmed === undefined) || i.locationConfirmed?.uuid === uuid)))
+    return this._items$.asObservable().pipe(map(assets => assets.filter(i => (i.locationOld && i.locationOld.uuid === uuid && i.locationConfirmed === undefined) || i.locationConfirmed?.uuid === uuid)))
   }
 
   getItemById(id: number): AssetModel | undefined {
@@ -121,5 +121,9 @@ export class AppService {
         }
       })
     })
+  }
+
+  getItems() {
+    return this._items$.asObservable();
   }
 }

@@ -78,7 +78,9 @@ export class AssetScanComponent implements OnInit {
 
   private startRoomScanning(serialHex: string) {
     this.selectedLocation = this._appService.getLocationByTagId(serialHex);
-    this.assets$ = this._appService.getItemsForRoom(this.selectedLocation.uuid).pipe(startWith([]));
+    if (this.selectedLocation) {
+      this.assets$ = this._appService.getItemsForRoom(this.selectedLocation.uuid).pipe(startWith([]));
+    }
   }
 
   barcodeTest(): void {
@@ -106,7 +108,7 @@ export class AssetScanComponent implements OnInit {
           if (scannedObj.id) {
             const scanned = this._appService.getItemById(scannedObj.id);
             if (scanned) {
-              if (scanned.locationOld.uuid === this.selectedLocation.uuid) {
+              if (scanned.locationOld && scanned.locationOld.uuid === this.selectedLocation.uuid) {
                 this._appService.setFound(scanned.id);
               } else {
                 this.showBadLocationDecision(scanned);
@@ -121,10 +123,14 @@ export class AssetScanComponent implements OnInit {
   }
 
   private showBadLocationDecision(scanned: AssetModel) {
+    let message = 'Majetek nemá přiřazenou místnost, chcete jej přiřadit do této lokace?';
+    if (scanned.locationOld) {
+      message = 'Majetek ' + scanned.name + ' by se měl nacházet v místnosti ' + scanned.locationOld.name + '. Chcete změnit jeho umístění na ' + this.selectedLocation.name + '?';
+    }
     setTimeout(() => {
       Dialogs.confirm({
         title: 'Umístění nesouhlasí',
-        message: 'Majetek ' + scanned.name + ' by se měl nacházet v místnosti ' + scanned.locationOld.name + '. Chcete změnit jeho umístění na ' + this.selectedLocation.name + '?',
+        message,
         okButtonText: 'Ano',
         neutralButtonText: 'Zrušit'
       }).then(result => {
