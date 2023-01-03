@@ -112,7 +112,7 @@ export class AppService {
   }
 
   sendData() {
-    return this.httpClient.post<void>(this.rest, {
+    return this.httpClient.post<void>(this.rest + '/barcodes/changes', {
       assets: this._items$.getValue().map(a => {
         return {
           id: a.id,

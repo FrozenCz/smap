@@ -25,6 +25,7 @@
     "@angular-devkit/build-angular": "~15.0.0",
     "@angular/compiler-cli": "~15.0.0",
     "@nativescript/android": "8.4.0",
+    "@nativescript/preview-cli": "1.0.2",
     "@nativescript/types": "~8.4.0",
     "@nativescript/webpack": "~5.0.12",
     "@ngtools/webpack": "~15.0.0",
