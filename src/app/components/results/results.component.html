@@ -1,3 +1,6 @@
+<ActionBar title="Výsledky skenování majetku">
+    <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
+</ActionBar>
 <GridLayout columns="auto">
     <ListView [items]="assets$ | async" width="100% ">
         <ng-template let-item="item">

@@ -19,6 +19,10 @@ Button {
   padding: 10 20 ;
   background-color: $primaryColor;
   color: $textColor;
+  &.scan {
+    height: 150;
+    font-size: 30;
+  }
   &.success {
     background-color: $successColor;
   }

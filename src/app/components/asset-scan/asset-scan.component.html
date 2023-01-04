@@ -1,7 +1,8 @@
 <ActionBar title="Skenování majetku">
     <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
 </ActionBar>
-<StackLayout>
+<GridLayout columns="*" rows="auto, *, auto">
+    <StackLayout row="0" col="0">
     <label *ngIf="!selectedLocation" text="Prosím přiložte zařízení k NFC štítku místnosti" style="font-size: 20; text-align: center"></label>
     <label *ngIf="selectedLocation" text="Scanujete místnost {{selectedLocation.name}}" style="font-size: 20; text-align: center"></label>
     <BarcodeScanner
@@ -12,14 +13,15 @@
             preferFrontCamera="false"
     >
     </BarcodeScanner>
-    <Button class="scan" text="Scanovat" [isEnabled]="!!selectedLocation" (tap)="barcodeTest()"></Button>
-    <ListView [items]="assets$ | async" *ngIf="selectedLocation">
+    </StackLayout>
+    <ListView [items]="assets$ | async" *ngIf="selectedLocation" row="1" col="0">
         <ng-template let-item="item">
             <StackLayout [class]="{'primary':item.found}">
                 <Label [text]="item.name"></Label>
             </StackLayout>
         </ng-template>
     </ListView>
+    <Button class="scan" text="Scanovat" [isEnabled]="!!selectedLocation" (tap)="barcodeTest()" row="2" col="0"></Button>
 <!--    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>-->
-</StackLayout>
+</GridLayout>
 
