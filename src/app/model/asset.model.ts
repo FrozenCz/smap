@@ -11,5 +11,6 @@ export interface AssetModel {
 export interface AssetModelDTO {
   id: number;
   name: string;
-  Location: LocationModel
+  location: LocationModel;
+  serialNumber: string;
 }

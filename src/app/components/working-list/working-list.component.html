@@ -1,0 +1,26 @@
+<ActionBar title="Tvorba sestavy pomocí naskenovaného majetku">
+    <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
+</ActionBar>
+<GridLayout columns="*" rows="auto, *, auto">
+    <StackLayout row="0" col="0">
+        <BarcodeScanner
+                class="scanner-round"
+                formats="QR_CODE, EAN_13"
+                beepOnScan="true"
+                reportDuplicates="true"
+                preferFrontCamera="false"
+        >
+        </BarcodeScanner>
+    </StackLayout>
+    <Button class="scan" text="Pojmenovat sestavu" (tap)="barcodeTest()" row="2" col="0"></Button>
+    <ListView [items]="scannedItems" row="1" col="0">
+        <ng-template let-item="item">
+            <StackLayout [class]="{'primary':item.found}">
+                <Label [text]="item.name"></Label>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+    <Button class="scan" text="Scanovat" (tap)="barcodeTest()" row="2" col="0"></Button>
+    <!--    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>-->
+</GridLayout>
+

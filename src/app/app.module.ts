@@ -9,13 +9,15 @@ import {LocationRegisterComponent} from '~/app/components/location-register/loca
 import {ResultsComponent} from '~/app/components/results/results.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from '~/app/services/auth.interceptor';
+import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
 
 @NgModule({
   bootstrap: [AppComponent],
   imports: [NativeScriptModule, AppRoutingModule, NativeScriptHttpClientModule, NativeScriptFormsModule],
   declarations: [AppComponent, MainPageComponent, ResultsComponent,
     AssetScanComponent,
-    LocationRegisterComponent
+    LocationRegisterComponent,
+    WorkingListComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

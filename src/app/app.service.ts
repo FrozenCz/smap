@@ -27,9 +27,9 @@ export class AppService {
       this._items$.next(assetModelDTOs.map(a => {
         return {
           id: a.id,
-          name: a.name,
+          name: a.name + ', sn:' + a.serialNumber,
           found: false,
-          locationOld: a.Location,
+          locationOld: a.location,
           locationConfirmed: undefined
         }
       }))
