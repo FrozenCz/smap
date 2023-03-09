@@ -3,6 +3,7 @@ import {BehaviorSubject, combineLatest, firstValueFrom, map, noop, Observable, t
 import {LocationModel} from './model/location.model';
 import {HttpClient} from '@angular/common/http';
 import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
+import {restUrl} from '~/app/config';
 
 
 @Injectable({
@@ -11,19 +12,18 @@ import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
 export class AppService {
   _locations$: BehaviorSubject<LocationModel[]> = new BehaviorSubject<LocationModel[]>([]);
   _items$: BehaviorSubject<AssetModel[]> = new BehaviorSubject<AssetModel[]>([]);
-  rest = 'https://smap-rest.milanknop.cz';
 
   constructor(private httpClient: HttpClient) {
     firstValueFrom(this.reloadData()).then(noop)
   }
 
   private fetchLocations(): Observable<LocationModel[]> {
-    return this.httpClient.get<LocationModel[]>(this.rest + '/locations').pipe(
+    return this.httpClient.get<LocationModel[]>(restUrl + '/locations').pipe(
       tap((locations) => this._locations$.next(locations)))
   }
 
   private fetchItems(): Observable<AssetModelDTO[]> {
-    return this.httpClient.get<AssetModelDTO[]>(this.rest + '/barcodes').pipe(tap((assetModelDTOs) => {
+    return this.httpClient.get<AssetModelDTO[]>(restUrl + '/assets/barcodes').pipe(tap((assetModelDTOs) => {
       this._items$.next(assetModelDTOs.map(a => {
         return {
           id: a.id,
@@ -46,7 +46,7 @@ export class AppService {
   }
 
   setNfcIdForLocation(locationUuid: string, tagId: string): Observable<void> {
-    return this.httpClient.patch<void>(this.rest + '/locations/' + locationUuid, {nfcId: tagId})
+    return this.httpClient.patch<void>(restUrl + '/locations/' + locationUuid + '/nfc', {nfcId: tagId})
   }
 
   static convertToHex(str: number[]): string {
@@ -112,7 +112,7 @@ export class AppService {
   }
 
   sendData() {
-    return this.httpClient.post<void>(this.rest + '/barcodes/changes', {
+    return this.httpClient.post<void>(restUrl + '/barcodes/changes', {
       assets: this._items$.getValue().map(a => {
         return {
           id: a.id,

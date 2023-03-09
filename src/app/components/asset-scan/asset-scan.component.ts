@@ -105,16 +105,17 @@ export class AssetScanComponent implements OnInit {
     }).then((result) => {
         if (result.text) {
           const scannedObj = JSON.parse(result.text);
-          if (scannedObj.id) {
-            const scanned = this._appService.getItemById(scannedObj.id);
-            if (scanned) {
-              if (scanned.locationOld && scanned.locationOld.uuid === this.selectedLocation.uuid) {
-                this._appService.setFound(scanned.id);
-              } else {
-                this.showBadLocationDecision(scanned);
-              }
-            }
-          }
+          console.log(scannedObj);
+          // if (scannedObj.id) {
+          //   const scanned = this._appService.getItemById(scannedObj.id);
+          //   if (scanned) {
+          //     if (scanned.locationOld && scanned.locationOld.uuid === this.selectedLocation.uuid) {
+          //       this._appService.setFound(scanned.id);
+          //     } else {
+          //       this.showBadLocationDecision(scanned);
+          //     }
+          //   }
+          // }
         }
       }, (errorMessage) => {
         console.log("No scan. " + errorMessage);

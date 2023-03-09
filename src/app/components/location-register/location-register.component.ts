@@ -63,6 +63,7 @@ export class LocationRegisterComponent implements OnInit {
       this.tagId = null;
       this.selectedLocation = null;
     }, reason => {
+      console.log(reason);
       const snackBar = new SnackBar();
       snackBar.action({
         message: 'Došlo k chybě',

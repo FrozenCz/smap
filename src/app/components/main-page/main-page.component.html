@@ -1,11 +1,21 @@
 <ActionBar title="Hlavní strana">
+    <ActionItem text="Odhlásit" *ngIf="userLogged" (tap)="logOut()"></ActionItem>
 </ActionBar>
-<FlexboxLayout flexDirection="column">
+<FlexboxLayout flexDirection="column" *ngIf="loggedUser$ | async; else loginForm; ">
     <FlexboxLayout flexDirection="row" flexGrow="1">
         <Button text="Načtení dat" class="basic" flexGrow="1" (tap)="loadData()"></Button>
         <Button text="Odeslání dat" class="success" flexGrow="1" (tap)="sendData()"></Button>
     </FlexboxLayout>
     <Button [nsRouterLink]="['/asset-scan']" text="Skenování majetku" class="primary" flexGrow="1"></Button>
-    <Button [nsRouterLink]="['/location-register']"  text="Registrace místnosti" class="primary" flexGrow="1"></Button>
+    <Button [nsRouterLink]="['/location-register']" text="Registrace místnosti" class="primary" flexGrow="1"></Button>
     <Button [nsRouterLink]="['/results']" text="Přehled oskenovaného majetku" flexGrow="1"></Button>
 </FlexboxLayout>
+<ng-template #loginForm>
+    <FlexboxLayout flexDirection="column" justifyContent="flex-end">
+        <TextField [(ngModel)]="userName" hint="Přihlašovací jméno"></TextField>
+        <TextField [(ngModel)]="password" hint="Heslo..." secure="true"></TextField>
+        <Button text="Přihlásit" class="primary p-1" (tap)="logIn(userName, password)"
+                [isEnabled]="userName.length > 0 && password.length > 0"></Button>
+    </FlexboxLayout>
+</ng-template>
+

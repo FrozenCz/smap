@@ -19,6 +19,7 @@ Button {
   padding: 10 20 ;
   background-color: $primaryColor;
   color: $textColor;
+  min-height: 80;
   &.scan {
     height: 150;
     font-size: 30;
