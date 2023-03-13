@@ -4,7 +4,7 @@
 <FlexboxLayout flexDirection="column" *ngIf="loggedUser$ | async; else loginForm; ">
     <FlexboxLayout flexDirection="row" flexGrow="1">
         <Button text="Načtení dat" class="basic" flexGrow="1" (tap)="loadData()"></Button>
-        <Button text="Odeslání dat" class="success" flexGrow="1" (tap)="sendData()"></Button>
+        <Button text="Odeslání dat" class="success" flexGrow="1" [nsRouterLink]="['/send-data']"></Button>
     </FlexboxLayout>
     <Button [nsRouterLink]="['/asset-scan']" text="Skenování majetku" class="primary" flexGrow="1"></Button>
     <Button [nsRouterLink]="['/working-lists']" text="Tvorba sestav" class="primary" flexGrow="1"></Button>

@@ -1,32 +1,38 @@
 import {Component, OnInit} from '@angular/core';
 import {AppService} from '~/app/app.service';
-import {Observable} from 'rxjs';
-import {AssetModel} from '~/app/model/asset.model';
-import {Nfc} from 'nativescript-nfc';
+import {Observable, switchMap} from 'rxjs';
 import {BarcodeScanner} from 'nativescript-barcodescanner';
-import {AssetScanComponent} from '~/app/components/asset-scan/asset-scan.component';
+import {WorkingList} from '~/app/components/working-lists/working-lists.component';
+import {WorkingListService} from '~/app/services/workingList.service';
+import {ActivatedRoute} from '@angular/router';
+import {Dialogs} from '@nativescript/core';
+import {AssetModel} from '~/app/model/asset.model';
 
 @Component({
   selector: 'ns-working-list',
   templateUrl: './working-list.component.html'
 })
 export class WorkingListComponent implements OnInit {
-  workingListName: string = '';
-  scannedItems: AssetModel[] = [];
-  avail = false;
-  assets$: Observable<AssetModel[]>;
+  workingList$: Observable<WorkingList | undefined>;
 
-  constructor(private _appService: AppService) {
-
+  constructor(
+    private route: ActivatedRoute,
+    private _appService: AppService,
+    private workingListService: WorkingListService) {
   }
 
   ngOnInit() {
-
-
+    this.workingList$ = this.route.paramMap.pipe(switchMap(paramMap => {
+      const id = +paramMap.get('id')
+      if (!id) {
+        throw new Error('id not provided!');
+      }
+      return this.workingListService.getOne$(id);
+    }))
   }
 
 
-  barcodeTest(): void {
+  barcodeScan(workingList: WorkingList): void {
     new BarcodeScanner().scan({
       formats: "QR_CODE, EAN_13",
       cancelLabel: "EXIT. Also, try the volume buttons!", // iOS only, default 'Close'
@@ -50,8 +56,11 @@ export class WorkingListComponent implements OnInit {
           const scannedObj = JSON.parse(result.text);
           if (scannedObj.id) {
             const scanned = this._appService.getItemById(scannedObj.id);
-            if (scanned && scanned.id && !this.scannedItems.some(i => i.id === scanned.id)) {
-              this.scannedItems.push(scanned);
+            if (scanned && scanned.id) {
+              this.workingListService.addItem({
+                workingList: workingList,
+                item: scanned
+              })
             }
           }
         }
@@ -60,4 +69,21 @@ export class WorkingListComponent implements OnInit {
       }
     );
   }
+
+  showDeleteConfirm(workingList: WorkingList, item: AssetModel): void {
+    Dialogs.confirm({
+      title: 'Smazání věci ze sestavy',
+      message: 'Opravdu chcete smazat věc ' + item.name + ' ze sestavy?',
+      neutralButtonText: 'Zrušit',
+      okButtonText: 'Smazat',
+    }).then((result) => {
+      if (result) {
+        this.workingListService.removeItem({
+          workingList,
+          item
+        });
+      }
+    })
+  }
+
 }

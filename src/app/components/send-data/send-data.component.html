@@ -1,0 +1,9 @@
+<ActionBar title="Odesílání dat">
+    <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
+</ActionBar>
+<FlexboxLayout flexDirection="column">
+    <Button text="Odeslání všech dat" class="danger" flexGrow="1" (tap)="sendAllData()"></Button>
+    <Button text="Odeslání sestav" class="primary" flexGrow="1"></Button>
+    <Button text="Odeslání místností" class="primary" flexGrow="1"></Button>
+</FlexboxLayout>
+

@@ -11,6 +11,7 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from '~/app/services/auth.interceptor';
 import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
 import {WorkingListsComponent} from '~/app/components/working-lists/working-lists.component';
+import {SendDataComponent} from '~/app/components/send-data/send-data.component';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -19,7 +20,8 @@ import {WorkingListsComponent} from '~/app/components/working-lists/working-list
     AssetScanComponent,
     LocationRegisterComponent,
     WorkingListComponent,
-    WorkingListsComponent
+    WorkingListsComponent,
+    SendDataComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

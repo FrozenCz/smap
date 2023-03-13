@@ -1,13 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService} from '../../app.service';
 import {Dialogs} from '@nativescript/core';
-
+import {WorkingListService} from '~/app/services/workingList.service';
+import {Observable} from 'rxjs';
+import {AssetModel} from '~/app/model/asset.model';
 
 
 export interface WorkingList {
   id: number;
   name: string;
-  items: [];
+  items: AssetModel[];
 }
 
 @Component({
@@ -15,10 +16,11 @@ export interface WorkingList {
   templateUrl: './working-lists.component.html'
 })
 export class WorkingListsComponent implements OnInit {
-  workingLists: WorkingList[] = [];
+  workingLists$: Observable<WorkingList[]>;
 
-  constructor(private _appService: AppService) {
 
+  constructor(private _workingListService: WorkingListService) {
+    this.workingLists$ = this._workingListService.getAll$();
   }
 
   ngOnInit(): void {
@@ -31,10 +33,11 @@ export class WorkingListsComponent implements OnInit {
       okButtonText: 'Vytvořit',
       neutralButtonText: 'Zrušit'
     }).then((result) => {
-      if (result) {
-        this.workingLists.push({
-          id: this.getId(),
-          name: result.text,
+      if (result.result) {
+        const id = this.getId();
+        this._workingListService.add({
+          id,
+          name: result.text.length === 0 ? 'nezadano_' + id : result.text,
           items: []
         })
       }
@@ -48,11 +51,12 @@ export class WorkingListsComponent implements OnInit {
   showDeleteConfirm(item: WorkingList): void {
     Dialogs.confirm({
       title: 'Smazání sestavy',
+      message: 'Opravdu chcete smazat sestavu ' + item.name + '?',
       neutralButtonText: 'Zrušit',
       okButtonText: 'Smazat',
     }).then((result) => {
       if (result) {
-        this.workingLists = this.workingLists.filter(workingList => workingList.id !== item.id)
+        this._workingListService.remove(item);
       }
     })
   }

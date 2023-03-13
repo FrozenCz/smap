@@ -14,6 +14,7 @@ $primaryTextColor: #212121;
 $secondaryTextColor: #757575;
 $dividerColor: #BDBDBD;
 $successColor: #245b24;
+$dangerColor: #691111;
 
 Button {
   padding: 10 20 ;
@@ -26,6 +27,9 @@ Button {
   }
   &.success {
     background-color: $successColor;
+  }
+  &.danger {
+    background-color: $dangerColor;
   }
   &.basic {
     background-color: $accentColor;

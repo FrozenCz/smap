@@ -7,12 +7,16 @@ import {AssetScanComponent} from '~/app/components/asset-scan/asset-scan.compone
 import {LocationRegisterComponent} from '~/app/components/location-register/location-register.component';
 import {ResultsComponent} from '~/app/components/results/results.component';
 import {WorkingListsComponent} from '~/app/components/working-lists/working-lists.component';
+import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
+import {SendDataComponent} from '~/app/components/send-data/send-data.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/main-page', pathMatch: 'full'},
   {path: 'main-page', component: MainPageComponent},
+  {path: 'send-data', component: SendDataComponent},
   {path: 'asset-scan', component: AssetScanComponent},
   {path: 'working-lists', component: WorkingListsComponent},
+  {path: 'working-lists/:id', component: WorkingListComponent},
   {path: 'location-register', component: LocationRegisterComponent},
   {path: 'results', component: ResultsComponent},
 ]
