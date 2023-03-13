@@ -10,6 +10,7 @@ import {ResultsComponent} from '~/app/components/results/results.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {AuthInterceptor} from '~/app/services/auth.interceptor';
 import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
+import {WorkingListsComponent} from '~/app/components/working-lists/working-lists.component';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -17,7 +18,8 @@ import {WorkingListComponent} from '~/app/components/working-list/working-list.c
   declarations: [AppComponent, MainPageComponent, ResultsComponent,
     AssetScanComponent,
     LocationRegisterComponent,
-    WorkingListComponent
+    WorkingListComponent,
+    WorkingListsComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

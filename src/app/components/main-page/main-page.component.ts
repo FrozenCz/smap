@@ -11,8 +11,8 @@ import {AuthService, JwtToken} from '~/app/services/auth.service';
 })
 export class MainPageComponent implements OnInit {
   loggedUser$: Observable<JwtToken | null>;
-  userName: string = '';
-  password: string = '';
+  userName: string = 'spravceA';
+  password: string = 'Test123!';
   userLogged: boolean = false;
 
   constructor(private _appService: AppService, private authService: AuthService) {

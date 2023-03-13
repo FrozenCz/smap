@@ -1,0 +1,18 @@
+<ActionBar title="Tvorba sestav">
+    <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
+</ActionBar>
+<GridLayout columns="*" rows="auto, *, auto">
+    <ListView [items]="workingLists" row="1" col="0">
+        <ng-template let-item="item">
+            <StackLayout [class]="{'primary':item.found}">
+                <Label [text]="item.name"></Label>
+                <Label [text]="item.id"></Label>
+                <Label [text]="item.id"></Label>
+                <Button (tap)="showDeleteConfirm(item)">Smazat</Button>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+    <Button class="scan" text="Přidat novou sestavu" (tap)="showCreateNewDialog()" row="2" col="0"></Button>
+    <!--    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>-->
+</GridLayout>
+
