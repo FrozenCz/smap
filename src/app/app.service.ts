@@ -49,6 +49,8 @@ export class AppService {
     return this.httpClient.patch<void>(restUrl + '/locations/' + locationUuid + '/nfc', {nfcId: tagId})
   }
 
+
+
   static convertToHex(str: number[]): string {
     let id: string = '';
     for (var i = 0; i < str.length; i++) {
@@ -111,7 +113,7 @@ export class AppService {
     return combineLatest([this.fetchLocations(), this.fetchItems()])
   }
 
-  sendData() {
+  sendItemsLocation() {
     return this.httpClient.post<void>(restUrl + '/barcodes/changes', {
       assets: this._items$.getValue().map(a => {
         return {

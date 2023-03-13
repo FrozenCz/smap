@@ -44,25 +44,7 @@ export class MainPageComponent implements OnInit {
     })
   }
 
-  sendData() {
-    firstValueFrom(this._appService.sendData()).then(() => {
-      const snackBar = new SnackBar();
-      snackBar.action({
-        message: 'Data odeslána',
-        backgroundColor: 'green',
-        textColor: 'white',
-        hideDelay: 2000
-      })
-    }, reason => {
-      const snackBar = new SnackBar();
-      snackBar.showSnack({
-        message: 'Došlo k chybě',
-        backgroundColor: 'red',
-        textColor: 'white',
-        hideDelay: 2000
-      })
-    })
-  }
+
 
 
   logIn(userName: string, password: string): void {

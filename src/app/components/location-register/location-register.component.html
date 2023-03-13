@@ -3,13 +3,27 @@
 </ActionBar>
 <StackLayout>
     <label *ngIf="tagId" [text]="tagId"></label>
-    <label *ngIf="!tagId" text="Prosím přiložte zařízení k NFC štítku {{tagId}}" style="font-size: 20; text-align: center"></label>
+    <label *ngIf="!tagId" text="Prosím přiložte zařízení k NFC štítku {{tagId}}"
+           style="font-size: 20; text-align: center"></label>
     <ListView [items]="locations$ | async" *ngIf="tagId">
         <ng-template let-item="item">
-            <StackLayout (tap)="selectedLocation=item" [class]="{'primary':selectedLocation && selectedLocation.uuid === item.uuid}">
+            <StackLayout (tap)="selectedLocation=item"
+                         [class]="{'primary':selectedLocation && selectedLocation.uuid === item.uuid}">
                 <Label [text]="item.name"></Label>
             </StackLayout>
         </ng-template>
     </ListView>
-    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>
+    <Button [isEnabled]="!!selectedLocation" (tap)="addNfcForRegister(selectedLocation, tagId)" class="primary"
+            text="Přiřadit" flexGrow="1" *ngIf="tagId"></Button>
+    <label text="Lokace připravené na registraci" *ngIf="(locationForRegister$ | async)?.length > 0"
+           style="font-size: 20; padding: 2"></label>
+    <ListView [items]="locationForRegister$ | async" *ngIf="!tagId">
+        <ng-template let-item="item">
+            <GridLayout columns="*, auto" rows="auto">
+                <Label [text]="item.name" row="0" col="0"></Label>
+                <Button text="smazat" row="0" col="1" (tap)="onRemoveNfc(item.uuid)"></Button>
+            </GridLayout>
+        </ng-template>
+    </ListView>
 </StackLayout>
+

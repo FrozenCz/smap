@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Nfc} from 'nativescript-nfc';
-import {firstValueFrom, Observable} from 'rxjs';
+import {Observable, combineLatest, map} from 'rxjs';
 import {AppService} from '~/app/app.service';
 import {LocationModel} from '~/app/model/location.model';
-import {SnackBar} from '@nativescript-community/ui-material-snackbar';
+import {LocationRegisterService} from '~/app/services/location-register.service';
+import {Dialogs} from '@nativescript/core';
 
 
 @Component({
@@ -17,10 +18,20 @@ export class LocationRegisterComponent implements OnInit {
   tagId: null | string = null;
   locations$: Observable<LocationModel[]>
   selectedLocation: LocationModel | null = null;
+  locationForRegister$: Observable<LocationModel[]>;
 
 
-  constructor(private _appService: AppService) {
+  constructor(private _appService: AppService, private locationRegisterService: LocationRegisterService) {
     this.locations$ = this._appService.getLocations$();
+    this.locationForRegister$ =
+      combineLatest([
+        this.locations$,
+        this.locationRegisterService.getLocationsForRegister$()
+      ]).pipe(map(([locations, forRegister]) => {
+        return forRegister.map(registeringLocation => {
+          return locations.find(location => location.uuid === registeringLocation.locationUuid)
+        })
+      }))
   }
 
 
@@ -51,26 +62,21 @@ export class LocationRegisterComponent implements OnInit {
     })
   }
 
-  setNfcIdForLocation(selectedLocation: LocationModel, tagId: string) {
-    firstValueFrom(this._appService.setNfcIdForLocation(selectedLocation.uuid, tagId)).then(() => {
-      const snackBar = new SnackBar();
-      snackBar.action({
-        message: 'NFC štítek úspěšně přiřazen k lokaci',
-        backgroundColor: 'green',
-        textColor: 'white',
-        hideDelay: 2000
+  addNfcForRegister(selectedLocation: LocationModel, tagId: string) {
+    this.locationRegisterService.add({locationUuid: selectedLocation.uuid, tagId: tagId})
+    this.tagId = null;
+    this.selectedLocation = null;
+  }
+
+  onRemoveNfc(uuid: any) {
+
+    Dialogs.confirm({title: 'Smazat?', message: 'Opravdu?', neutralButtonText: 'Zrušit', okButtonText: 'Smazat'})
+      .then((result) => {
+        if (result) {
+          this.locationRegisterService.remove(uuid);
+        }
       })
-      this.tagId = null;
-      this.selectedLocation = null;
-    }, reason => {
-      console.log(reason);
-      const snackBar = new SnackBar();
-      snackBar.action({
-        message: 'Došlo k chybě',
-        hideDelay: 2000,
-        backgroundColor: 'red',
-        textColor: 'black',
-      })
-    })
+
+
   }
 }
