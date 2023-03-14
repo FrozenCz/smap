@@ -4,14 +4,15 @@ import {LocationModel} from './model/location.model';
 import {HttpClient} from '@angular/common/http';
 import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
 import {restUrl} from '~/app/config';
+import {WorkingList} from '~/app/components/working-lists/working-lists.component';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
-  _locations$: BehaviorSubject<LocationModel[]> = new BehaviorSubject<LocationModel[]>([]);
-  _items$: BehaviorSubject<AssetModel[]> = new BehaviorSubject<AssetModel[]>([]);
+  private _locations$: BehaviorSubject<LocationModel[]> = new BehaviorSubject<LocationModel[]>([]);
+  private _items$: BehaviorSubject<AssetModel[]> = new BehaviorSubject<AssetModel[]>([]);
 
   constructor(private httpClient: HttpClient) {
     firstValueFrom(this.reloadData()).then(noop)
@@ -49,7 +50,15 @@ export class AppService {
     return this.httpClient.patch<void>(restUrl + '/locations/' + locationUuid + '/nfc', {nfcId: tagId})
   }
 
-
+  saveWorkingList(workingList: WorkingList): Observable<void> {
+    console.log(workingList);
+    return this.httpClient.post<void>(restUrl + '/lists/', {
+      name: workingList.name,
+      assetsIds: workingList.items.map(item => item.id),
+      connected: false,
+      archived: false
+    })
+  }
 
   static convertToHex(str: number[]): string {
     let id: string = '';

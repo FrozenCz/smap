@@ -3,6 +3,8 @@ import {firstValueFrom, map, Observable} from 'rxjs';
 import {SnackBar} from '@nativescript-community/ui-material-snackbar';
 import {AppService} from '~/app/app.service';
 import {LocationNfc, LocationRegisterService} from '~/app/services/location-register.service';
+import {WorkingListService} from '~/app/services/workingList.service';
+import {WorkingList} from '~/app/components/working-lists/working-lists.component';
 
 
 @Component({
@@ -12,9 +14,19 @@ import {LocationNfc, LocationRegisterService} from '~/app/services/location-regi
 })
 export class SendDataComponent {
   locationToRegister$: Observable<number>;
+  scannedItems$: Observable<number>;
+  workingLists$: Observable<number>;
 
-  constructor(private _appService: AppService, private locationRegisterService: LocationRegisterService) {
+
+  constructor(private _appService: AppService,
+              private locationRegisterService: LocationRegisterService,
+              private workingListService: WorkingListService
+  ) {
     this.locationToRegister$ = this.locationRegisterService.getLocationsForRegister$().pipe(map(loc => loc.length))
+    this.scannedItems$ = this._appService.getItems().pipe(
+      map(items => items.filter(item => item.locationConfirmed)?.length ?? 0)
+    )
+    this.workingLists$ = this.workingListService.getAll$().pipe(map(wl => wl.length))
   }
 
 
@@ -68,4 +80,31 @@ export class SendDataComponent {
     })
   }
 
+
+  async sendWorkingLists(): Promise<void> {
+    const workingLists: WorkingList[] = await firstValueFrom(this.workingListService.getAll$());
+    workingLists.forEach(workingList => this.sendRequestWorkingList(workingList));
+  }
+
+  private sendRequestWorkingList(workingList: WorkingList) {
+    firstValueFrom(this._appService.saveWorkingList(workingList)).then(() => {
+      const snackBar = new SnackBar();
+      this.workingListService.remove(workingList);
+      snackBar.action({
+        message: 'Sestava úspěšně přenesena',
+        backgroundColor: 'green',
+        textColor: 'white',
+        hideDelay: 2000
+      })
+    }, reason => {
+      console.log(reason);
+      const snackBar = new SnackBar();
+      snackBar.action({
+        message: 'Došlo k chybě',
+        hideDelay: 2000,
+        backgroundColor: 'red',
+        textColor: 'black',
+      })
+    })
+  }
 }

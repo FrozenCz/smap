@@ -3,8 +3,13 @@
 </ActionBar>
 <FlexboxLayout flexDirection="column">
     <Button text="Odeslání všech dat" class="danger" flexGrow="1" (tap)="sendAllData()"></Button>
-    <Button text="Odeslání sestav" class="basic" flexGrow="1"></Button>
-    <Button [text]="'Odeslání místností ('+(locationToRegister$ | async)+')'" [isEnabled]="(locationToRegister$ | async) > 0" class="basic" flexGrow="1" (tap)="sendLocationRegistration()"></Button>
-    <Button text="Odeslání umístění majetku" class="basic" flexGrow="1" (tap)="sendItemsLocation()"></Button>
+    <Button [text]="'Odeslání sestav ('+(workingLists$ | async)+')'"
+            [isEnabled]="(workingLists$ | async) > 0" class="basic" flexGrow="1"
+            (tap)="sendWorkingLists()"></Button>
+    <Button [text]="'Odeslání místností ('+(locationToRegister$ | async)+')'"
+            [isEnabled]="(locationToRegister$ | async) > 0" class="basic" flexGrow="1"
+            (tap)="sendLocationRegistration()"></Button>
+    <Button [text]="'Odeslání umístění majetku ('+(scannedItems$ | async)+')'"
+            class="basic" flexGrow="1" [isEnabled]="(scannedItems$ | async) > 0" (tap)="sendItemsLocation()"></Button>
 </FlexboxLayout>
 
