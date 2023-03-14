@@ -3,6 +3,7 @@ import {BehaviorSubject, map, Observable, ReplaySubject, tap} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {restUrl} from '../config';
 import jwt_decode from 'jwt-decode';
+import {AppService} from '~/app/app.service';
 
 export interface JwtToken {
   userId: number;
@@ -39,7 +40,6 @@ export class AuthService {
         } else {
           this.token$.next(null);
         }
-
         return;
       })
     )

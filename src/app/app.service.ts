@@ -1,10 +1,14 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, firstValueFrom, map, noop, Observable, tap} from 'rxjs';
+import {BehaviorSubject, combineLatest, filter, firstValueFrom, map, noop, Observable, take, tap} from 'rxjs';
 import {LocationModel} from './model/location.model';
 import {HttpClient} from '@angular/common/http';
 import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
 import {restUrl} from '~/app/config';
 import {WorkingList} from '~/app/components/working-lists/working-lists.component';
+import {StockTakingDTO} from '~/app/model/stock-taking.model';
+import {StockTakingService} from '~/app/services/stock-taking.service';
+import {Transform} from '~/app/utils/transform';
+import {AuthService} from '~/app/services/auth.service';
 
 
 @Injectable({
@@ -14,8 +18,18 @@ export class AppService {
   private _locations$: BehaviorSubject<LocationModel[]> = new BehaviorSubject<LocationModel[]>([]);
   private _items$: BehaviorSubject<AssetModel[]> = new BehaviorSubject<AssetModel[]>([]);
 
-  constructor(private httpClient: HttpClient) {
-    firstValueFrom(this.reloadData()).then(noop)
+  constructor(private httpClient: HttpClient, private stockTakingService: StockTakingService, private authService: AuthService) {
+    this.authService.token$.asObservable().subscribe((token) => {
+      if (token && token.accessToken) {
+        this.reloadData().pipe(take(1)).toPromise().then(noop)
+      }
+    })
+  }
+
+  private fetchStockTakings(): Observable<StockTakingDTO[]> {
+    return this.httpClient.get<StockTakingDTO[]>(restUrl + '/assets/stock-taking-in-progress').pipe(
+      tap(stockTakings => this.stockTakingService.put(stockTakings.map(stockTaking => Transform.stockTakingDTO(stockTaking))))
+    )
   }
 
   private fetchLocations(): Observable<LocationModel[]> {
@@ -30,6 +44,7 @@ export class AppService {
           id: a.id,
           name: a.name + ', sn:' + a.serialNumber,
           found: false,
+          foundAt: null,
           locationOld: a.location,
           locationConfirmed: undefined
         }
@@ -51,7 +66,6 @@ export class AppService {
   }
 
   saveWorkingList(workingList: WorkingList): Observable<void> {
-    console.log(workingList);
     return this.httpClient.post<void>(restUrl + '/lists/', {
       name: workingList.name,
       assetsIds: workingList.items.map(item => item.id),
@@ -119,7 +133,7 @@ export class AppService {
   }
 
   reloadData() {
-    return combineLatest([this.fetchLocations(), this.fetchItems()])
+    return combineLatest([this.fetchLocations(), this.fetchItems(), this.fetchStockTakings()])
   }
 
   sendItemsLocation() {

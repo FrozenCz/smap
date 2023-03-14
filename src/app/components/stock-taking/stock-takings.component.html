@@ -1,0 +1,14 @@
+<ActionBar title="Inventury">
+    <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
+</ActionBar>
+<GridLayout columns="*" rows="auto, *, auto">
+    <ListView [items]="stockTakings$ | async" row="1" col="0">
+        <ng-template let-item="item">
+            <GridLayout columns="*" rows="*">
+                <Label [text]="item.name" horizontalAlignment="stretch" row="0" col="0"
+                       [nsRouterLink]="[item.uuid]"></Label>
+            </GridLayout>
+        </ng-template>
+    </ListView>
+</GridLayout>
+

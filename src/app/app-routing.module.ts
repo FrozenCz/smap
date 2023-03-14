@@ -9,6 +9,7 @@ import {ResultsComponent} from '~/app/components/results/results.component';
 import {WorkingListsComponent} from '~/app/components/working-lists/working-lists.component';
 import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
 import {SendDataComponent} from '~/app/components/send-data/send-data.component';
+import {StockTakingsComponent} from '~/app/components/stock-taking/stock-takings.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/main-page', pathMatch: 'full'},
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'working-lists/:id', component: WorkingListComponent},
   {path: 'location-register', component: LocationRegisterComponent},
   {path: 'results', component: ResultsComponent},
+  {path: 'stock-takings', component: StockTakingsComponent},
 ]
 
 @NgModule({

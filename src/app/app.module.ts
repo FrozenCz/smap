@@ -12,6 +12,7 @@ import {AuthInterceptor} from '~/app/services/auth.interceptor';
 import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
 import {WorkingListsComponent} from '~/app/components/working-lists/working-lists.component';
 import {SendDataComponent} from '~/app/components/send-data/send-data.component';
+import {StockTakingsComponent} from '~/app/components/stock-taking/stock-takings.component';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -21,7 +22,7 @@ import {SendDataComponent} from '~/app/components/send-data/send-data.component'
     LocationRegisterComponent,
     WorkingListComponent,
     WorkingListsComponent,
-    SendDataComponent
+    SendDataComponent, StockTakingsComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

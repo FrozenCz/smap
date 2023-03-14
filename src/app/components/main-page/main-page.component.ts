@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AppService} from '~/app/app.service';
-import {firstValueFrom, Observable, tap} from 'rxjs';
+import {firstValueFrom, map, Observable, tap} from 'rxjs';
 import {SnackBar} from '@nativescript-community/ui-material-snackbar';
 import {AuthService, JwtToken} from '~/app/services/auth.service';
+import {StockTakingService} from '~/app/services/stock-taking.service';
 
 @Component({
   selector: 'ns-main-page',
@@ -14,9 +15,11 @@ export class MainPageComponent implements OnInit {
   userName: string = 'spravceA';
   password: string = 'Test123!';
   userLogged: boolean = false;
+  isAnyStockTaking$: Observable<boolean>;
 
-  constructor(private _appService: AppService, private authService: AuthService) {
+  constructor(private _appService: AppService, private authService: AuthService, private stockTakingService: StockTakingService) {
     this.loggedUser$ = this.authService.user$().pipe(tap(token => this.userLogged = !!token));
+    this.isAnyStockTaking$ = this.stockTakingService.getAll$().pipe(map(stockTakings => !!stockTakings.length))
   }
 
   ngOnInit() {

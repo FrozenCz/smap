@@ -8,15 +8,23 @@
     </FlexboxLayout>
     <Button [nsRouterLink]="['/asset-scan']" text="Skenování majetku" class="primary" flexGrow="1"></Button>
     <Button [nsRouterLink]="['/working-lists']" text="Tvorba sestav" class="primary" flexGrow="1"></Button>
-    <Button [nsRouterLink]="['/location-register']" text="Registrace místnosti" class="primary" flexGrow="1"></Button>
+    <Button [nsRouterLink]="['/location-register']" text="Registrace místnosti" class="primary"
+            flexGrow="1"></Button>
     <Button [nsRouterLink]="['/results']" text="Přehled oskenovaného majetku" flexGrow="1"></Button>
+    <Button [nsRouterLink]="['/stock-takings']" text="Inventury" flexGrow="1" [isEnabled]="isAnyStockTaking$ | async"></Button>
 </FlexboxLayout>
+
 <ng-template #loginForm>
-    <FlexboxLayout flexDirection="column" justifyContent="flex-end">
-        <TextField [(ngModel)]="userName" hint="Přihlašovací jméno"></TextField>
-        <TextField [(ngModel)]="password" hint="Heslo..." secure="true"></TextField>
-        <Button text="Přihlásit" class="primary p-1" (tap)="logIn(userName, password)"
-                [isEnabled]="userName.length > 0 && password.length > 0"></Button>
-    </FlexboxLayout>
+    <GridLayout rows="auto, auto, *" columns="*">
+        <Button row="0" col="0" style="font-size: 20" text="Petr Pořádný" class="" (tap)="userName='spravceA'; password='Test123!'"></Button>
+        <Button row="1" col='0' style="font-size: 20" text="Petr Běhavý" (tap)="userName='mobilniApp'; password='Test123!'"></Button>
+        <FlexboxLayout flexDirection="column" justifyContent="flex-end" row="2" col="0">
+            <TextField [(ngModel)]="userName" hint="Přihlašovací jméno"></TextField>
+            <TextField [(ngModel)]="password" hint="Heslo..." secure="true"></TextField>
+            <Button text="Přihlásit" class="primary p-1" (tap)="logIn(userName, password)"
+                    [isEnabled]="userName.length > 0 && password.length > 0"></Button>
+        </FlexboxLayout>
+    </GridLayout>
+
 </ng-template>
 
