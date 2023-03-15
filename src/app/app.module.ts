@@ -12,7 +12,8 @@ import {AuthInterceptor} from '~/app/services/auth.interceptor';
 import {WorkingListComponent} from '~/app/components/working-list/working-list.component';
 import {WorkingListsComponent} from '~/app/components/working-lists/working-lists.component';
 import {SendDataComponent} from '~/app/components/send-data/send-data.component';
-import {StockTakingsComponent} from '~/app/components/stock-taking/stock-takings.component';
+import {StockTakingsComponent} from '~/app/components/stock-takings/stock-takings.component';
+import {StockTakingDetailComponent} from '~/app/components/stock-taking-detail/stock-taking-detail.component';
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -22,7 +23,7 @@ import {StockTakingsComponent} from '~/app/components/stock-taking/stock-takings
     LocationRegisterComponent,
     WorkingListComponent,
     WorkingListsComponent,
-    SendDataComponent, StockTakingsComponent
+    SendDataComponent, StockTakingsComponent, StockTakingDetailComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

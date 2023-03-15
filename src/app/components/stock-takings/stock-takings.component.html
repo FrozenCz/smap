@@ -4,8 +4,11 @@
 <GridLayout columns="*" rows="auto, *, auto">
     <ListView [items]="stockTakings$ | async" row="1" col="0">
         <ng-template let-item="item">
-            <GridLayout columns="*" rows="*">
-                <Label [text]="item.name" horizontalAlignment="stretch" row="0" col="0"
+            <GridLayout columns="*, auto" rows="*" style="font-size: 20">
+                <Label [text]="item.name" row="0" col="0"
+                       [nsRouterLink]="[item.uuid]"></Label>
+                <Label [text]="'Nalezeno (' +getFoundItems(item.items)+ '/' + item.items.length + ')'"
+                       row="0" col="1"
                        [nsRouterLink]="[item.uuid]"></Label>
             </GridLayout>
         </ng-template>

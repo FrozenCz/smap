@@ -17,7 +17,7 @@ export abstract class Transform {
     return {
       ...item,
       foundAt: item.foundAt ? new Date(item.foundAt) : null,
-      locationConfirmed: item.foundAt ? item.location: null,
+      locationConfirmed: item.foundAt ? item.location: undefined,
       locationOld: item.location,
       found: !!item.foundAt
     }

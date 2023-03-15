@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
 import {StockTaking} from '~/app/model/stock-taking.model';
 import {StockTakingService} from '~/app/services/stock-taking.service';
+import {AssetModel} from '~/app/model/asset.model';
 
 
 @Component({
@@ -13,6 +14,10 @@ export class StockTakingsComponent {
 
   constructor(private stockTakingService: StockTakingService) {
     this.stockTakings$ = this.stockTakingService.getAll$();
+  }
+
+  getFoundItems(items: AssetModel[]): number {
+    return items.filter(item => item.found)?.length ?? 0;
   }
 
 }

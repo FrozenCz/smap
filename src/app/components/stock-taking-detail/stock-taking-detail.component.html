@@ -1,0 +1,39 @@
+<ng-container *ngIf="stockTaking$ | async as stockTaking; else back;">
+    <ActionBar [title]="stockTaking.name">
+        <ActionItem [nsRouterLink]="['../']" text="Zpět"></ActionItem>
+    </ActionBar>
+    <GridLayout columns="*" rows="auto, *, auto">
+        <StackLayout row="0" col="0">
+            <label *ngIf="!(selectedLocation$ | async)" text="Prosím přiložte zařízení k NFC štítku místnosti"
+                   style="font-size: 20; text-align: center"></label>
+            <label *ngIf="selectedLocation$ | async as selectedLocation" text="Scanujete místnost {{selectedLocation.name}}"
+                   style="font-size: 20; text-align: center"></label>
+            <BarcodeScanner
+                    class="scanner-round"
+                    formats="QR_CODE, EAN_13"
+                    beepOnScan="true"
+                    reportDuplicates="true"
+                    preferFrontCamera="false"
+            >
+            </BarcodeScanner>
+        </StackLayout>
+        <ListView [items]="assets$ | async" *ngIf="selectedLocation$ | async" row="1" col="0">
+            <Label text="test"></Label>
+            <ng-template let-item="item">
+                <StackLayout [class]="{'primary':item.found}">
+                    <Label [text]="item.name"></Label>
+                </StackLayout>
+            </ng-template>
+        </ListView>
+        <Button class="scan" text="Scanovat" [isEnabled]="!!(selectedLocation$ | async)" (tap)="barcodeScan({ stockTakingUuid: stockTaking.uuid })" row="2" col="0"></Button>
+        <!--    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>-->
+    </GridLayout>
+
+
+</ng-container>
+
+<ng-template #back>
+    <ActionBar title="Inventura nenalezena">
+        <ActionItem [nsRouterLink]="['../']" text="Zpět"></ActionItem>
+    </ActionBar>
+</ng-template>
