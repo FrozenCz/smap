@@ -22,6 +22,7 @@ export class StockTakingService {
   private static getPointerStockTakingItem(pointerStockTaking: StockTaking, scannedId: number) {
     const found = pointerStockTaking.items.find(item => item.id === scannedId);
     if (!found) {
+      //possible upgrade: confirm to add list to transfer?
       throw new Error('item is not yours!')
     }
     return found;
