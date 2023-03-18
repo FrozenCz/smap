@@ -1,5 +1,9 @@
-import {AssetModeStockTakingDTO, StockTaking, StockTakingDTO} from '../model/stock-taking.model';
-import {AssetModel} from '../model/asset.model';
+import {
+  AssetModelStockTakingItem,
+  AssetModeStockTakingDTO,
+  StockTaking,
+  StockTakingDTO
+} from '../model/stock-taking.model';
 
 export abstract class Transform {
   private constructor() {
@@ -13,9 +17,11 @@ export abstract class Transform {
     }
   }
 
-  private static stockTakingItemDTO(item: AssetModeStockTakingDTO): AssetModel {
+  private static stockTakingItemDTO(item: AssetModeStockTakingDTO): AssetModelStockTakingItem {
     return {
-      ...item,
+      name: item.assetName,
+      uuid: item.uuid,
+      id: item.assetId,
       foundAt: item.foundAt ? new Date(item.foundAt) : null,
       locationConfirmed: item.foundAt ? item.location: undefined,
       locationOld: item.location,

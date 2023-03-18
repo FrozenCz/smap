@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, map, Observable, of, startWith, switchMap} from 'rxjs';
+import {BehaviorSubject, map, Observable, of, switchMap} from 'rxjs';
 import {StockTaking} from '../../model/stock-taking.model';
 import {StockTakingService} from '../../services/stock-taking.service';
 import {ActivatedRoute} from '@angular/router';
@@ -26,7 +26,7 @@ export class StockTakingDetailComponent implements OnInit {
   constructor(
     private stockTakingService: StockTakingService,
     private route: ActivatedRoute,
-    private _appService: AppService
+    private _appService: AppService,
   ) {
     this.stockTaking$ = this.route.paramMap.pipe(switchMap((paramMap) => {
         const uuid = paramMap.get('uuid');
@@ -120,7 +120,7 @@ export class StockTakingDetailComponent implements OnInit {
       fullScreen: true,             // Currently only used on iOS; with iOS 13 modals are no longer shown fullScreen by default, which may be actually preferred. But to use the old fullScreen appearance, set this to 'true'. Default 'false'.
       torchOn: false,               // launch with the flashlight on (default false)
       closeCallback: () => {
-        console.log("Scanner closed")
+        // console.log("Scanner closed")
       }, // invoked when the scanner was closed (success or abort)
       resultDisplayDuration: 500,   // Android only, default 1500 (ms), set to 0 to disable echoing the scanned text
       // Android only, default undefined (sensor-driven orientation), other options: portrait|landscape

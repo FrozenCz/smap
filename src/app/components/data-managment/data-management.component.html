@@ -1,0 +1,10 @@
+<ActionBar title="Správa dat">
+    <ActionItem [nsRouterLink]="['../']" text="Zpět"></ActionItem>
+</ActionBar>
+<FlexboxLayout flexDirection="column">
+    <Button (tap)="loadData()" text="Doplnění dat" class="btn-primary" flexGrow="1" ></Button>
+    <Button (tap)="resetData()" text="Přepsání dat" class="danger" flexGrow="1" ></Button>
+    <Button [nsRouterLink]="['send-data']" text="Odeslání dat" class="success" flexGrow="1" ></Button>
+</FlexboxLayout>
+
+

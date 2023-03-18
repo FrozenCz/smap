@@ -1,1 +1,1 @@
-export const restUrl = 'https://bp.milanknop.cz/rest';
+export const restUrl = 'https://dp-rest.milanknop.cz';

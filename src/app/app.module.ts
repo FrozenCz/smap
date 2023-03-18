@@ -14,16 +14,24 @@ import {WorkingListsComponent} from '~/app/components/working-lists/working-list
 import {SendDataComponent} from '~/app/components/send-data/send-data.component';
 import {StockTakingsComponent} from '~/app/components/stock-takings/stock-takings.component';
 import {StockTakingDetailComponent} from '~/app/components/stock-taking-detail/stock-taking-detail.component';
+import {DataManagementComponent} from '~/app/components/data-managment/data-management.component';
+
 
 @NgModule({
   bootstrap: [AppComponent],
-  imports: [NativeScriptModule, AppRoutingModule, NativeScriptHttpClientModule, NativeScriptFormsModule],
+  imports: [
+    NativeScriptModule,
+    AppRoutingModule,
+    NativeScriptHttpClientModule,
+    NativeScriptFormsModule,
+  ],
   declarations: [AppComponent, MainPageComponent, ResultsComponent,
     AssetScanComponent,
     LocationRegisterComponent,
     WorkingListComponent,
     WorkingListsComponent,
-    SendDataComponent, StockTakingsComponent, StockTakingDetailComponent
+    SendDataComponent, StockTakingsComponent, StockTakingDetailComponent,
+    DataManagementComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}

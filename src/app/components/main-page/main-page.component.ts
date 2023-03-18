@@ -16,9 +16,13 @@ export class MainPageComponent implements OnInit {
   password: string = 'Test123!';
   userLogged: boolean = false;
   isAnyStockTaking$: Observable<boolean>;
+  loggedUserName = '';
 
   constructor(private _appService: AppService, private authService: AuthService, private stockTakingService: StockTakingService) {
-    this.loggedUser$ = this.authService.user$().pipe(tap(token => this.userLogged = !!token));
+    this.loggedUser$ = this.authService.user$().pipe(
+      tap(token => this.loggedUserName = token?.username),
+      tap(token => this.userLogged = !!token)
+    );
     this.isAnyStockTaking$ = this.stockTakingService.getAll$().pipe(map(stockTakings => !!stockTakings.length))
   }
 

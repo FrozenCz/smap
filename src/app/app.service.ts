@@ -1,14 +1,24 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, filter, firstValueFrom, map, noop, Observable, take, tap} from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  noop,
+  Observable,
+  switchMap,
+  take,
+  tap
+} from 'rxjs';
 import {LocationModel} from './model/location.model';
 import {HttpClient} from '@angular/common/http';
 import {AssetModel, AssetModelDTO} from '~/app/model/asset.model';
 import {restUrl} from '~/app/config';
 import {WorkingList} from '~/app/components/working-lists/working-lists.component';
-import {StockTakingDTO} from '~/app/model/stock-taking.model';
+import {StockTaking, StockTakingDTO, StockTakingDTOPatch} from '~/app/model/stock-taking.model';
 import {StockTakingService} from '~/app/services/stock-taking.service';
 import {Transform} from '~/app/utils/transform';
 import {AuthService} from '~/app/services/auth.service';
+import {ApplicationSettings} from '@nativescript/core';
 
 
 @Injectable({
@@ -19,6 +29,10 @@ export class AppService {
   private _items$: BehaviorSubject<AssetModel[]> = new BehaviorSubject<AssetModel[]>([]);
 
   constructor(private httpClient: HttpClient, private stockTakingService: StockTakingService, private authService: AuthService) {
+
+    this._locations$.next(this.loadLocallyLocations())
+    this._items$.next(this.loadLocallyItems())
+
     this.authService.token$.asObservable().subscribe((token) => {
       if (token && token.accessToken) {
         this.reloadData().pipe(take(1)).toPromise().then(noop)
@@ -26,20 +40,83 @@ export class AppService {
     })
   }
 
+  private static transformStockPatch(stockTakingPatch: StockTaking[]): StockTakingDTOPatch {
+    return {stockTakings: stockTakingPatch.map(stockTaking => {
+      return {
+        uuid: stockTaking.uuid,
+        items: stockTaking.items.map(item => {
+          return {
+            uuid: item.uuid,
+            foundAt: item.foundAt,
+            locationUuid: item.locationConfirmed ? item.locationConfirmed.uuid : null
+          }
+        })
+      }
+      })}
+  }
+
   private fetchStockTakings(): Observable<StockTakingDTO[]> {
     return this.httpClient.get<StockTakingDTO[]>(restUrl + '/assets/stock-taking-in-progress').pipe(
-      tap(stockTakings => this.stockTakingService.put(stockTakings.map(stockTaking => Transform.stockTakingDTO(stockTaking))))
+      tap(stockTakings => this.stockTakingService.putFetched(stockTakings.map(stockTaking => Transform.stockTakingDTO(stockTaking))))
     )
   }
 
   private fetchLocations(): Observable<LocationModel[]> {
     return this.httpClient.get<LocationModel[]>(restUrl + '/locations').pipe(
-      tap((locations) => this._locations$.next(locations)))
+      tap((locations) => this.putFetchedLocations(locations)))
+  }
+
+  private putFetchedItems(items: AssetModel[]): void {
+    const alreadyIn = this._items$.getValue();
+    const alreadyInUuids = alreadyIn.map(st => st.id);
+    const onlyNew = items.filter(st => !alreadyInUuids.includes(st.id))
+    this.changeStateItems([...alreadyIn, ...onlyNew])
+  }
+
+  private changeStateLocations(locations: LocationModel[]): void {
+    this.saveLocallyLocations(locations);
+    this._locations$.next(locations);
+  }
+
+  private changeStateItems(items: AssetModel[]): void {
+    this.saveLocallyItems(items);
+    this._items$.next(items);
+  }
+
+  private putFetchedLocations(locations: LocationModel[]): void {
+    const alreadyIn = this._locations$.getValue();
+    const alreadyInUuids = alreadyIn.map(st => st.uuid);
+    const onlyNew = locations.filter(st => !alreadyInUuids.includes(st.uuid))
+    this.changeStateLocations([...alreadyIn, ...onlyNew])
+  }
+
+  private saveLocallyItems(items: AssetModel[]) {
+    ApplicationSettings.setString('items', JSON.stringify(items))
+  }
+
+  private loadLocallyItems(): AssetModel[] {
+    const items = ApplicationSettings.getString('items')
+    if (items) {
+      return JSON.parse(items);
+    }
+    return []
+  }
+
+  private saveLocallyLocations(locations: LocationModel[]) {
+    ApplicationSettings.setString('locations', JSON.stringify(locations))
+  }
+
+  private loadLocallyLocations(): LocationModel[] {
+    const locations = ApplicationSettings.getString('locations')
+    if (locations) {
+      return JSON.parse(locations);
+    }
+    return []
   }
 
   private fetchItems(): Observable<AssetModelDTO[]> {
     return this.httpClient.get<AssetModelDTO[]>(restUrl + '/assets/barcodes').pipe(tap((assetModelDTOs) => {
-      this._items$.next(assetModelDTOs.map(a => {
+      this.putFetchedItems(assetModelDTOs.map(a => {
         return {
           id: a.id,
           name: a.name + ', sn:' + a.serialNumber,
@@ -121,7 +198,7 @@ export class AppService {
   setFound(id: number) {
     const withFound = this._items$.getValue();
     withFound.find(i => i.id === id).found = true;
-    this._items$.next(withFound);
+    this.changeStateItems(withFound);
   }
 
   changeLocation(id: number, uuid: string) {
@@ -129,7 +206,7 @@ export class AppService {
     const change = withFound.find(i => i.id === id);
     change.found = true;
     change.locationConfirmed = this._locations$.getValue().find(l => l.uuid === uuid);
-    this._items$.next(withFound);
+    this.changeStateItems(withFound);
   }
 
   reloadData() {
@@ -150,5 +227,18 @@ export class AppService {
 
   getItems() {
     return this._items$.asObservable();
+  }
+
+  sendStockTakings(): Observable<void> {
+
+    return this.stockTakingService.getAll$()
+      .pipe(
+        switchMap(
+          (stockTakings) => {
+            const stockTakingDTOPatch: StockTakingDTOPatch = AppService.transformStockPatch(stockTakings);
+           return  this.httpClient.patch<void>(restUrl + '/assets/stock-taking-in-progress', {stockTakings: stockTakingDTOPatch.stockTakings})
+          }
+        )
+      )
   }
 }

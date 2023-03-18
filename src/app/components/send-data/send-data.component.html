@@ -1,5 +1,5 @@
 <ActionBar title="Odesílání dat">
-    <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
+    <ActionItem [nsRouterLink]="['../']" text="Zpět"></ActionItem>
 </ActionBar>
 <FlexboxLayout flexDirection="column">
     <Button text="Odeslání všech dat" class="danger" flexGrow="1" (tap)="sendAllData()"></Button>
@@ -11,5 +11,7 @@
             (tap)="sendLocationRegistration()"></Button>
     <Button [text]="'Odeslání umístění majetku ('+(scannedItems$ | async)+')'"
             class="basic" flexGrow="1" [isEnabled]="(scannedItems$ | async) > 0" (tap)="sendItemsLocation()"></Button>
+    <Button [text]="'Odeslání inventur ('+(stockTakings$ | async)+')'"
+            class="basic" flexGrow="1" [isEnabled]="(stockTakings$ | async) > 0" (tap)="sendStockTakings()"></Button>
 </FlexboxLayout>
 

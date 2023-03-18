@@ -5,6 +5,7 @@ import {AppService} from '~/app/app.service';
 import {LocationNfc, LocationRegisterService} from '~/app/services/location-register.service';
 import {WorkingListService} from '~/app/services/workingList.service';
 import {WorkingList} from '~/app/components/working-lists/working-lists.component';
+import {StockTakingService} from '~/app/services/stock-taking.service';
 
 
 @Component({
@@ -16,22 +17,28 @@ export class SendDataComponent {
   locationToRegister$: Observable<number>;
   scannedItems$: Observable<number>;
   workingLists$: Observable<number>;
+  stockTakings$: Observable<number>;
 
 
   constructor(private _appService: AppService,
               private locationRegisterService: LocationRegisterService,
-              private workingListService: WorkingListService
+              private workingListService: WorkingListService,
+              private stockTakingService: StockTakingService
   ) {
     this.locationToRegister$ = this.locationRegisterService.getLocationsForRegister$().pipe(map(loc => loc.length))
     this.scannedItems$ = this._appService.getItems().pipe(
       map(items => items.filter(item => item.locationConfirmed)?.length ?? 0)
     )
     this.workingLists$ = this.workingListService.getAll$().pipe(map(wl => wl.length))
+    this.stockTakings$ = this.stockTakingService.getAll$().pipe(map(wl => wl.length))
   }
 
 
   sendAllData() {
-
+    this.sendLocationRegistration()
+    this.sendItemsLocation()
+    this.sendStockTakings()
+    this.sendWorkingLists()
   }
 
   async sendLocationRegistration(): Promise<void> {
@@ -92,6 +99,28 @@ export class SendDataComponent {
       this.workingListService.remove(workingList);
       snackBar.action({
         message: 'Sestava úspěšně přenesena',
+        backgroundColor: 'green',
+        textColor: 'white',
+        hideDelay: 2000
+      })
+    }, reason => {
+      console.log(reason);
+      const snackBar = new SnackBar();
+      snackBar.action({
+        message: 'Došlo k chybě',
+        hideDelay: 2000,
+        backgroundColor: 'red',
+        textColor: 'black',
+      })
+    })
+  }
+
+  sendStockTakings() {
+    firstValueFrom(this._appService.sendStockTakings()).then(() => {
+      const snackBar = new SnackBar();
+
+      snackBar.action({
+        message: 'Data úspěšně přenesena',
         backgroundColor: 'green',
         textColor: 'white',
         hideDelay: 2000

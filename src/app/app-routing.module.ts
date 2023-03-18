@@ -11,11 +11,13 @@ import {WorkingListComponent} from '~/app/components/working-list/working-list.c
 import {SendDataComponent} from '~/app/components/send-data/send-data.component';
 import {StockTakingsComponent} from '~/app/components/stock-takings/stock-takings.component';
 import {StockTakingDetailComponent} from '~/app/components/stock-taking-detail/stock-taking-detail.component';
+import {DataManagementComponent} from '~/app/components/data-managment/data-management.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/main-page', pathMatch: 'full'},
   {path: 'main-page', component: MainPageComponent},
-  {path: 'send-data', component: SendDataComponent},
+  {path: 'data-management', component: DataManagementComponent},
+  {path: 'data-management/send-data', component: SendDataComponent},
   {path: 'asset-scan', component: AssetScanComponent},
   {path: 'working-lists', component: WorkingListsComponent},
   {path: 'working-lists/:id', component: WorkingListComponent},
