@@ -16,6 +16,7 @@
     "@nativescript/angular": "~15.0.0",
     "@nativescript/core": "~8.4.0",
     "@nativescript/theme": "~3.0.2",
+    "js-sha1": "^0.6.0",
     "jwt-decode": "^3.1.2",
     "nativescript-barcodescanner": "^4.1.2",
     "nativescript-nfc": "^5.0.0",

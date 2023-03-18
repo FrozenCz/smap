@@ -52,8 +52,6 @@ export class MainPageComponent implements OnInit {
   }
 
 
-
-
   logIn(userName: string, password: string): void {
     firstValueFrom(this.authService.login(userName, password)).then(() => {
       const snackBar = new SnackBar();
@@ -65,6 +63,7 @@ export class MainPageComponent implements OnInit {
       })
     }, reason => {
       const snackBar = new SnackBar();
+      console.log(reason);
       snackBar.showSnack({
         message: 'Došlo k chybě',
         backgroundColor: 'red',
@@ -73,6 +72,7 @@ export class MainPageComponent implements OnInit {
       })
     })
   }
+
 
   logOut() {
     this.authService.logOut()
