@@ -28,7 +28,8 @@ export class StockTakingDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private _appService: AppService,
   ) {
-    this.stockTaking$ = this.route.paramMap.pipe(switchMap((paramMap) => {
+    this.stockTaking$ = this.route.paramMap.pipe(
+      switchMap((paramMap) => {
         const uuid = paramMap.get('uuid');
         if (uuid) {
           return this.stockTakingService.getOne$(uuid);

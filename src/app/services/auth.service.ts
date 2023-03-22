@@ -19,7 +19,8 @@ export interface JwtToken {
   providedIn: 'root'
 })
 export class AuthService {
-  token$: BehaviorSubject<{ accessToken: string, jwtToken: JwtToken } | null> = new BehaviorSubject<{ accessToken: string, jwtToken: JwtToken } | null>(null);
+  token$: BehaviorSubject<{ accessToken: string, jwtToken: JwtToken } | null> =
+    new BehaviorSubject<{ accessToken: string, jwtToken: JwtToken } | null>(null);
 
   constructor(private httpClient: HttpClient) {
   }

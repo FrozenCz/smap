@@ -41,18 +41,20 @@ export class AppService {
   }
 
   private static transformStockPatch(stockTakingPatch: StockTaking[]): StockTakingDTOPatch {
-    return {stockTakings: stockTakingPatch.map(stockTaking => {
-      return {
-        uuid: stockTaking.uuid,
-        items: stockTaking.items.map(item => {
-          return {
-            uuid: item.uuid,
-            foundAt: item.foundAt,
-            locationUuid: item.locationConfirmed ? item.locationConfirmed.uuid : null
-          }
-        })
-      }
-      })}
+    return {
+      stockTakings: stockTakingPatch.map(stockTaking => {
+        return {
+          uuid: stockTaking.uuid,
+          items: stockTaking.items.map(item => {
+            return {
+              uuid: item.uuid,
+              foundAt: item.foundAt,
+              locationUuid: item.locationConfirmed ? item.locationConfirmed.uuid : null
+            }
+          })
+        }
+      })
+    }
   }
 
   private fetchStockTakings(): Observable<StockTakingDTO[]> {
@@ -187,7 +189,12 @@ export class AppService {
   }
 
   getItemsForRoom(uuid: string): Observable<AssetModel[]> {
-    return this._items$.asObservable().pipe(map(assets => assets.filter(i => (i.locationOld && i.locationOld.uuid === uuid && i.locationConfirmed === undefined) || i.locationConfirmed?.uuid === uuid)))
+    return this._items$.asObservable()
+      .pipe(
+        map(assets => assets.filter(i =>
+          (i.locationOld && i.locationOld.uuid === uuid && i.locationConfirmed === undefined)
+          || i.locationConfirmed?.uuid === uuid
+        )))
   }
 
   getItemById(id: number): AssetModel | undefined {
@@ -236,7 +243,7 @@ export class AppService {
         switchMap(
           (stockTakings) => {
             const stockTakingDTOPatch: StockTakingDTOPatch = AppService.transformStockPatch(stockTakings);
-           return  this.httpClient.patch<void>(restUrl + '/assets/stock-taking-in-progress', {stockTakings: stockTakingDTOPatch.stockTakings})
+            return this.httpClient.patch<void>(restUrl + '/assets/stock-taking-in-progress', {stockTakings: stockTakingDTOPatch.stockTakings})
           }
         )
       )

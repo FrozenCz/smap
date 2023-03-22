@@ -76,14 +76,14 @@ export class AssetScanComponent implements OnInit {
     })
   }
 
-  private startRoomScanning(serialHex: string) {
+  private startRoomScanning(serialHex: string): void {
     this.selectedLocation = this._appService.getLocationByTagId(serialHex);
     if (this.selectedLocation) {
       this.assets$ = this._appService.getItemsForRoom(this.selectedLocation.uuid).pipe(startWith([]));
     }
   }
 
-  barcodeTest(): void {
+  barcodeScan(): void {
     new BarcodeScanner().scan({
       formats: "QR_CODE, EAN_13",
       cancelLabel: "EXIT. Also, try the volume buttons!", // iOS only, default 'Close'

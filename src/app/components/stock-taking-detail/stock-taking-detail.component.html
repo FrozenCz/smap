@@ -8,14 +8,6 @@
                    style="font-size: 20; text-align: center"></label>
             <label *ngIf="selectedLocation$ | async as selectedLocation" text="Scanujete místnost {{selectedLocation.name}}"
                    style="font-size: 20; text-align: center"></label>
-            <BarcodeScanner
-                    class="scanner-round"
-                    formats="QR_CODE, EAN_13"
-                    beepOnScan="true"
-                    reportDuplicates="true"
-                    preferFrontCamera="false"
-            >
-            </BarcodeScanner>
         </StackLayout>
         <ListView [items]="assets$ | async" *ngIf="selectedLocation$ | async" row="1" col="0">
             <Label text="test"></Label>

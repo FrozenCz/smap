@@ -2,7 +2,7 @@
     <ActionItem [nsRouterLink]="['/']" text="Zpět"></ActionItem>
 </ActionBar>
 <StackLayout>
-    <label *ngIf="tagId" [text]="tagId"></label>
+    <label *ngIf="tagId" [text]="'Štítek: ' + tagId"></label>
     <label *ngIf="!tagId" text="Prosím přiložte zařízení k NFC štítku {{tagId}}"
            style="font-size: 20; text-align: center"></label>
     <ListView [items]="locations$ | async" *ngIf="tagId">

@@ -47,13 +47,11 @@ export class LocationRegisterComponent implements OnInit {
 
           nfc.setOnNdefDiscoveredListener((data) => {
             const serialHex = AppService.convertToHex(data.id)
-            // console.log(serialHex);
             this.tagId = serialHex;
           })
 
           nfc.setOnTagDiscoveredListener((data) => {
             const serialHex = AppService.convertToHex(data.id)
-            // console.log(serialHex);
             this.tagId = serialHex;
           })
 

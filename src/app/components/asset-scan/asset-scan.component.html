@@ -5,14 +5,6 @@
     <StackLayout row="0" col="0">
     <label *ngIf="!selectedLocation" text="Prosím přiložte zařízení k NFC štítku místnosti" style="font-size: 20; text-align: center"></label>
     <label *ngIf="selectedLocation" text="Scanujete místnost {{selectedLocation.name}}" style="font-size: 20; text-align: center"></label>
-    <BarcodeScanner
-            class="scanner-round"
-            formats="QR_CODE, EAN_13"
-            beepOnScan="true"
-            reportDuplicates="true"
-            preferFrontCamera="false"
-    >
-    </BarcodeScanner>
     </StackLayout>
     <ListView [items]="assets$ | async" *ngIf="selectedLocation" row="1" col="0">
         <ng-template let-item="item">
@@ -21,7 +13,6 @@
             </StackLayout>
         </ng-template>
     </ListView>
-    <Button class="scan" text="Scanovat" [isEnabled]="!!selectedLocation" (tap)="barcodeTest()" row="2" col="0"></Button>
-<!--    <Button [isEnabled]="!!selectedLocation" (tap)="setNfcIdForLocation(selectedLocation, tagId)" class="primary" text="Přiřadit" flexGrow="1"></Button>-->
+    <Button class="scan" text="Scanovat" [isEnabled]="!!selectedLocation" (tap)="barcodeScan()" row="2" col="0"></Button>
 </GridLayout>
 
